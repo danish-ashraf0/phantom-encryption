@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hacker Attack Simulator</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
+        body {
+            font-family: 'Press Start 2P', cursive;
+            text-align: center;
+            margin: 50px;
+            background: url('https://wallpapers.com/images/hd/hacker-green-technology-graphic-hacking-android-66ygphn8mfnqipjd.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #0f0;
+            overflow: hidden;
+        }
+        .container {
+            display: inline-block;
+            padding: 20px;
+            border: 2px solid #0f0;
+            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.8);
+            box-shadow: 0px 0px 20px #0f0;
+            animation: flicker 1.5s infinite alternate;
+        }
+        input, button {
+            margin: 10px;
+            padding: 12px;
+            font-size: 18px;
+            font-family: 'Press Start 2P', cursive;
+            background-color: #111;
+            color: #0f0;
+            border: 2px solid #0f0;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0f0;
+            color: #111;
+            box-shadow: 0 0 10px #0f0;
+        }
+        #result {
+            display: none;
+        }
+        @keyframes flicker {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+        @keyframes shake {
+            0% { transform: translate(1px, 1px); }
+            25% { transform: translate(-1px, -1px); }
+            50% { transform: translate(1px, -1px); }
+            75% { transform: translate(-1px, 1px); }
+            100% { transform: translate(1px, 1px); }
+        }
+        .shake {
+            animation: shake 0.2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>⚠ Choose Your Fate ⚠</h2>
+        <button onclick="chooseEncryption(true)">Encrypt 🔐</button>
+        <button onclick="chooseEncryption(false)">Stay Unsafe 😱</button>
+        <br>
+        <input type="text" id="message" placeholder="Enter message" style="display: none;">
+        <input type="number" id="shift" placeholder="Private Key" style="display: none;">
+        <button id="encryptBtn" onclick="encryptMessage()" style="display: none;">Encrypt Message</button>
+        <h3 id="resultText" style="display: none;">Cipher Text: <span id="result">---</span></h3>
+    </div>
+    <script>
+        function chooseEncryption(isSafe) {
+            if (isSafe) {
+                alert("✅ Wise Choice! You Are Safe Now! ✅");
+                document.getElementById("message").style.display = "inline";
+                document.getElementById("shift").style.display = "inline";
+                document.getElementById("encryptBtn").style.display = "inline";
+            } else {
+                document.body.classList.add('shake');
+                setTimeout(() => document.body.classList.remove('shake'), 3000);
+                setTimeout(() => alert("⚠ WARNING: You Are NOT Safe! Hackers are watching! ⚠"), 1000);
+                setTimeout(() => alert("💀 Your Data is at Risk! 💀"), 3000);
+                setTimeout(() => alert("🔥 Doom is Approaching in 5... 4... 3... 🔥"), 5000);
+                startSelfDestruct();
+            }
+        }
+
+        function caesarCipher(str, shift) {
+            return str.split('').map(char => {
+                if (char.match(/[a-z]/i)) {
+                    let code = char.charCodeAt(0);
+                    let base = code >= 65 && code <= 90 ? 65 : 97;
+                    return String.fromCharCode(((code - base + shift + 26) % 26) + base);
+                }
+                return char;
+            }).join('');
+        }
+
+        function encryptMessage() {
+            let message = document.getElementById("message").value;
+            let shift = parseInt(document.getElementById("shift").value);
+            if (isNaN(shift)) {
+                alert("Please enter a valid shift value!");
+                return;
+            }
+            let encrypted = caesarCipher(message, shift);
+            let resultElement = document.getElementById("resultText");
+            resultElement.innerText = encrypted;
+            document.getElementById("resultText").style.display = "inline";
+        }
+        function startSelfDestruct() {
+            let countdown = 3;
+            let interval = setInterval(() => {
+                document.title = `💥 Self-Destruct in ${countdown} 💥`;
+                countdown--;
+                if (countdown < 0) {
+                    clearInterval(interval);
+                    document.body.innerHTML = '<h1 style="color:red; text-align:center; font-size:50px;">💀 SYSTEM COMPROMISED 💀</h1>';
+                }
+            }, 100);
+        }
+    </script>
+</body>
+</html>
